@@ -29,9 +29,35 @@ var gfunc = require('./app/general_functions'); //common functions
 module.exports = function(app, passport) {
 
     app.get('/',gfunc.home);
+    app.get('/index.html',function(req,res){
+        res.render("./index.ejs");
+    });
    app.get('/listing', function(req,res){
         res.render("./listing.ejs", {username:'', title:'', datarows:[]});
     });
+   app.get('/about.html',function(req, res){
+    res.render("./about.ejs");
+   });
+   app.get('/solution.html',function(req, res){
+    res.render("./solution.ejs");
+   });
+   app.get('/search_category', gfunc.search_category);
+   app.get('/email',function(req, res){
+    res.render("./enquiry.ejs");
+   });
+      app.get('/career.html',function(req, res){
+    res.render("./career.ejs");
+   });
+    app.get('/blog.html',function(req, res){
+    res.render("./blog.ejs");
+   });
+     app.get('/blog-detail',function(req, res){
+    res.render("./blog-detail.ejs");
+   });
+   app.post('/email',gfunc.email, gfunc.home);
+   app.post('/subscribe',gfunc.subscribe);
+   
+
 }
     // PROFILE SECTION =====================
     // app.get('/profile/:id', func.isLoggedInfunc, func.profilefunc); // issLoggedIn verifies that user is authenticated
@@ -115,12 +141,13 @@ module.exports = function(app, passport) {
     //these functions do not require user to be logged in
     //HOME PAGE of website.... 
 
+
 /*  app.get('/', gfunc.home);
 
     app.get('/beta', gfunc.beta_home);
     app.get('/new', gfunc.new_home);
     app.post('/featured:id',gfunc.featured);
-    app.get('/search_category', gfunc.search_category);
+   
     app.post('/search',gfunc.search);
     app.post('/new_search',gfunc.search);
     app.post('/view:id', gfunc.view);

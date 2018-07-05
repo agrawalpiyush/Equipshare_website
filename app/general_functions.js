@@ -4,6 +4,7 @@
 var mysql = require('mysql');
 var dbconfig = require('../config/database');
 var connection = mysql.createConnection(dbconfig.connection);
+var alert = require('alert-node');
 
 // //connection.query('USE ' + dbconfig.database);
 
@@ -212,13 +213,25 @@ module.exports = {
                   connection.query("INSERT INTO enquiry (category, name, email, mobile, company, enquiry, date, status, userid) VALUES(?,?,?,?,?,?,?,?,?)", [req.body.category, req.body.name, req.body.email,req.body.mobile, req.body.company, req.body.enquiry, today, 0,uid], function(err){
                     if(err) throw err;
                    else {
-                  req.session.msg = "Your inquiry is recorded"
+                  req.session.msg = "Your inquiry is recorded";
                    next();}
         
                 });
               }
           });
+    },
+
+    subscribe : function(req, res){
+     connection.query("INSERT IGNORE INTO promotion (email ,added ) VALUES(?,?)",[req.body.email,0],function(err){
+         if(err) throw err;
+         else{
+        alert('Your email address is successfully added....!!!!');
+        res.render("index.ejs");
+        }
+     });
+
     }
+
 
 //     // route to check that the client is loged in
 //     isLoggedInfunc: function(req, res, next) {
