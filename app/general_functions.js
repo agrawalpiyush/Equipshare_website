@@ -49,8 +49,8 @@ var alert = require('alert-node');
 module.exports = {
 
     // compare_now : function(req,res){
-    //     if(req.session.compare){
-    //         compare = req.session.compare
+    //     if(req.compare){
+    //         compare = req.compare
     //         str = "SELECT * FROM equipment_type WHERE type_id IN (";
     //         str1 = '';    
     //         for(var i = 0; i <compare.length; i++){
@@ -70,8 +70,8 @@ module.exports = {
     // },
 
     // compare :function(req,res){
-    //     if(!req.session.compare) req.session.compare = []; 
-    //     compare = req.session.compare
+    //     if(!req.compare) req.compare = []; 
+    //     compare = req.compare
     //     if(compare.length>4) return res.send();
     //     type_id = req.query.type_id;
     //     for(var i = 0; i< compare.length; i++){
@@ -81,7 +81,7 @@ module.exports = {
     //         }
     //     }
     //     compare.push(req.query.type_id);
-    //     req.session.compare = compare;
+    //     req.compare = compare;
     //     return res.send(compare);
     // },
 
@@ -102,6 +102,14 @@ module.exports = {
     });  
 
   },
+  search_category : function(req,res){
+        var cat_selected = req.query.category;
+        var sql="SELECT DISTINCT subcategory FROM equipment_type WHERE category = ?";
+        connection.query(sql, [cat_selected], function(err,result){
+            if(err) throw err;
+            else res.send(result);
+        });  
+    },
 
 
 //     new_home: function(req,res){
@@ -195,13 +203,13 @@ module.exports = {
 //     },
 // //Insert enquiry into db
     email : function(req,res, next){
-        var today = new Date();
-        var dd = today.getDate();
-        var mm = today.getMonth()+1; //January is 0!
-        var yyyy = today.getFullYear();
-        if(dd<10) dd = '0'+dd;
-        if(mm<10) mm = '0'+mm; 
-        today = dd + '/' + mm + '/' + yyyy;
+        // var today = new Date();
+        // var dd = today.getDate();
+        // var mm = today.getMonth()+1; //January is 0!
+        // var yyyy = today.getFullYear();
+        // if(dd<10) dd = '0'+dd;
+        // if(mm<10) mm = '0'+mm; 
+        // today = yyyy + '-' + mm + '-' + dd;
         connection.query("SELECT id FROM account WHERE (mobile= ? ) OR (email= ?)",[req.body.mobile, req.body.email], function(err,rows){
             if(err) throw err;
 
@@ -210,7 +218,7 @@ module.exports = {
              if (rows.length)
                 uid=rows[0].id;
             
-                  connection.query("INSERT INTO enquiry (category, name, email, mobile, company, enquiry, date, status, userid) VALUES(?,?,?,?,?,?,?,?,?)", [req.body.category, req.body.name, req.body.email,req.body.mobile, req.body.company, req.body.enquiry, today, 0,uid], function(err){
+                  connection.query("INSERT INTO enquiry (category, name, email, mobile, company, enquiry, date, status, userid) VALUES(?,?,?,?,?,?,current_timestamp(),?,?)", [req.body.category, req.body.name, req.body.email,req.body.mobile, req.body.company, req.body.enquiry, 0,uid], function(err){
                     if(err) throw err;
                    else {
                   req.session.msg = "Your inquiry is recorded";
@@ -222,7 +230,7 @@ module.exports = {
     },
 
     subscribe : function(req, res){
-     connection.query("INSERT IGNORE INTO promotion (email ,added ) VALUES(?,?)",[req.body.email,0],function(err){
+     connection.query("INSERT IGNORE INTO promotion (email ,status ) VALUES(?,?)",[req.body.email,0],function(err){
          if(err) throw err;
          else{
         alert('Your email address is successfully added....!!!!');

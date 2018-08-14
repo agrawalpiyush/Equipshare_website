@@ -32,8 +32,8 @@ module.exports = function(app, passport) {
     app.get('/index.html',function(req,res){
         res.render("./index.ejs");
     });
-   app.get('/listing', function(req,res){
-        res.render("./listing.ejs", {username:'', title:'', datarows:[]});
+   app.get('/Equipments', function(req,res){
+        res.render("./listing.ejs");
     });
    app.get('/about.html',function(req, res){
     res.render("./about.ejs");
@@ -56,6 +56,7 @@ module.exports = function(app, passport) {
    });
    app.post('/email',gfunc.email, gfunc.home);
    app.post('/subscribe',gfunc.subscribe);
+   
    
 
 }
